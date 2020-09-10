@@ -8,9 +8,15 @@ public class PlayerController: MonoBehaviour
 {
     public Camera eyes;
     CharacterController controller;
+    private Rigidbody playerRB;
+
+    public bool isOnGround = true;
 
     public float speed;
     public float sensitivity;
+
+    public float jumpForce;
+    public float gravityModifier;
 
     float moveFB;
     float moveLR;
@@ -23,11 +29,21 @@ public class PlayerController: MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
+        playerRB = GetComponent<Rigidbody>();
+        Physics.gravity *= gravityModifier;
     } 
 
  
     void Update()
     {
+
+        if(Input.GetKeyDown(KeyCode.Space) && isOnGround)
+        {
+            playerRB.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isOnGround = false;
+        }
+
         moveFB = Input.GetAxis("Vertical");
         moveLR = Input.GetAxis("Horizontal");
         mouseX = Input.GetAxis("Mouse X");
@@ -41,6 +57,14 @@ public class PlayerController: MonoBehaviour
         Vector3 movement = new Vector3(moveLR * speed * Time.deltaTime, 0, moveFB * speed * Time.deltaTime);
         controller.Move(transform.rotation *  movement);
         
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isOnGround = true;
+        }
     }
 
 }
