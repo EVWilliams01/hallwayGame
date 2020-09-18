@@ -16,7 +16,7 @@ public class DisplayItem : MonoBehaviour
      //if mouse is hovering over object and within 5f then show text 
     private void OnMouseOver()
     {
-        if(rayCastScript.targetDistance < 5 )
+        if(rayCastScript.targetDistance < 1.5 )
         {
             myText.text = myString;
             diaplayInfo = true;

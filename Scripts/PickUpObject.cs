@@ -22,7 +22,7 @@ public class PickUpObject : MonoBehaviour
 
         //if the player is 3f away or less from object then it will do soemthing
 
-        if (dist <= 3f)
+        if (dist <= 1f)
         {
             
             hasPlayer = true;

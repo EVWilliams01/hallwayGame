@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MoveDoor : MonoBehaviour
 {
-    public float speed = 2f;
+    public float speed = 0.5f;
 
     public Button buttonScript;
 
