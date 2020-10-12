@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpObject : MonoBehaviour
+public class PickUpKey : MonoBehaviour
 {
     public Transform player;
     public Transform playerCam;
@@ -12,17 +12,32 @@ public class PickUpObject : MonoBehaviour
     bool hasPlayer = false;
     bool beingCarried = false;
     public bool touched = false;
-    
-    
+
+    public Camera character;
+
+    public DisplayItem displayItemScript;
+    public GameObject key;
+
+
+    float mouseX;
+    float mouseY;
+    public float sensitivity;
+
+
+
+
     void Update()
     {
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
 
+        float dist = Vector3.Distance(key.transform.position, player.position);
 
-        float dist = Vector3.Distance(gameObject.transform.position, player.position);
+        Debug.Log(dist);
 
-        //if the player is 3f away or less from object then it will do soemthing
+        //if the player is 1f away or less from object then it will do soemthing
 
-        if (dist <= 1f)
+        if (dist <= 1.5f)
         {
             
             hasPlayer = true;
@@ -36,23 +51,29 @@ public class PickUpObject : MonoBehaviour
         }
 
         //if has player is true and mouse button is clicked then put object as child of camera and being carried is true 
-
-        if (hasPlayer && Input.GetMouseButtonDown(0))
+       
+        if (hasPlayer && displayItemScript.diaplayInfo == true && Input.GetMouseButtonDown(0) )
         {
+            Debug.Log("aa");
             
             GetComponent<Rigidbody>().isKinematic = true;
-            transform.parent = playerCam;
+            
             beingCarried = true;
             
         }
-
+ 
 
         // being carried is true so do something
         
         if (beingCarried)
         {
+            transform.rotation = character.transform.rotation;
 
-            
+
+            transform.position = character.transform.position;
+                        
+            transform.Rotate(0, mouseX * sensitivity, 0);
+            transform.Rotate(-mouseY * sensitivity, 0, 0);
 
 
             if (Input.GetMouseButtonUp(0))
@@ -64,14 +85,6 @@ public class PickUpObject : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(playerCam.forward * throwForce);
                 
             }
-            else if (Input.GetMouseButtonDown(1))
-            {
-               
-                GetComponent<Rigidbody>().isKinematic = false;
-                transform.parent = null;
-                beingCarried = false;
-               
-            }
         }
     }
 
@@ -82,6 +95,16 @@ public class PickUpObject : MonoBehaviour
         if (beingCarried)
         {
             touched = true;
+            
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log(collision);
+
+       if( collision.gameObject.CompareTag("Key Lock"))
+        {
+           Destroy(gameObject);
             
         }
     }
